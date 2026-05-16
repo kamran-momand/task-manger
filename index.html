@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>taskmanger&#128175</h1>
+
+    <input type="text" id="khan" placeholder="Enter your task">
+    <button id="btn">Add</button>
+
+    <ul id="tasklist"></ul>
+
+    <script>
+
+        let input = document.getElementById("khan");
+        let addbtn = document.getElementById("btn");
+        let list = document.getElementById("tasklist");
+
+        // Load saved tasks when page refreshes
+        window.addEventListener("DOMContentLoaded", loadTasks);
+
+        addbtn.addEventListener("click", function () {
+
+            let task = input.value.trim();
+
+            if (task === "") {
+                alert("Enter something");
+                return;
+            }
+
+            addTask(task);
+
+            saveTask(task);
+
+            input.value = "";
+        });
+
+        // Function to create task in UI
+        function addTask(taskText) {
+
+            let li = document.createElement("li");
+            li.innerText = taskText;
+
+            let btn = document.createElement("button");
+            btn.innerText = "Delete";
+
+            btn.addEventListener("click", function () {
+
+                li.remove();
+
+                deleteTask(taskText);
+
+            });
+
+            li.appendChild(btn);
+
+            list.appendChild(li);
+        }
+
+        // Save task in localStorage
+        function saveTask(task) {
+
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+            tasks.push(task);
+
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        // Load tasks from localStorage
+        function loadTasks() {
+
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+            tasks.forEach(function(task) {
+
+                addTask(task);
+
+            });
+        }
+
+        // Delete task from localStorage
+        function deleteTask(taskToDelete) {
+
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+            tasks = tasks.filter(function(task) {
+
+                return task !== taskToDelete;
+
+            });
+
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+    </script>
+
+</body>
+</html>
